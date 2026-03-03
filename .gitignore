@@ -1,0 +1,40 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.coverage
+
+# Virtual environments
+venv/
+.venv/
+backend/venv/
+
+# Environment files
+.env
+backend/.env
+
+# Databases and model artifacts
+*.db
+*.sqlite
+*.sqlite3
+backend/finance_ai.db
+finance_ai.db
+backend/finance_ai/ml_models/*.pkl
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+
+# OS/editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+
+# Large local datasets
+backend/finance_ai/ml_models/loan_status_prediction.csv
