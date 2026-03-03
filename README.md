@@ -5,6 +5,7 @@ AI-powered finance advisor project with a Pyramid backend, ML prediction endpoin
 <img width="1145" height="644" alt="{A6361EA5-4B7F-48B7-B2B8-FBA997C9120B}" src="https://github.com/user-attachments/assets/3412c6ba-191f-4a64-9c1e-974411427c30" />
 <img width="1158" height="479" alt="{2BD89FB3-AD02-47C7-A909-D8471A0FBDEB}" src="https://github.com/user-attachments/assets/3d88ab42-7adc-49b9-9987-cea4f27ba825" />
 <img width="1113" height="432" alt="{F3EFBBAE-884F-4EB8-AF3C-4BB1DD95C9A9}" src="https://github.com/user-attachments/assets/87ea6bd9-e524-4509-b7db-36cc67d4e1bf" />
+<img width="716" height="500" alt="{00EA31E0-FA43-4477-BF54-50837FEC54F0}" src="https://github.com/user-attachments/assets/8354b7ad-ce20-4a21-933f-cadbd2d8d07e" />
 
 ## Features
 
