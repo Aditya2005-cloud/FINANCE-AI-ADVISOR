@@ -1,6 +1,11 @@
 # FINANCE-AI-ADVISOR
 
 AI-powered finance advisor project with a Pyramid backend, ML prediction endpoints, and a React frontend workflow.
+<img width="1281" height="733" alt="{52FC3C71-9483-4BAE-9340-D22CA12F0B29}" src="https://github.com/user-attachments/assets/26490c5c-3a05-4b5a-aa97-c5dda9566940" />
+<img width="1145" height="644" alt="{A6361EA5-4B7F-48B7-B2B8-FBA997C9120B}" src="https://github.com/user-attachments/assets/3412c6ba-191f-4a64-9c1e-974411427c30" />
+<img width="1158" height="479" alt="{2BD89FB3-AD02-47C7-A909-D8471A0FBDEB}" src="https://github.com/user-attachments/assets/3d88ab42-7adc-49b9-9987-cea4f27ba825" />
+<img width="1113" height="432" alt="{F3EFBBAE-884F-4EB8-AF3C-4BB1DD95C9A9}" src="https://github.com/user-attachments/assets/87ea6bd9-e524-4509-b7db-36cc67d4e1bf" />
+
 
 ## Features
 
