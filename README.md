@@ -1,6 +1,13 @@
 # FINANCE-AI-ADVISOR
 
-AI-powered finance advisor project with a Pyramid backend, ML prediction endpoints, and a React frontend workflow.
+AI-powered finance advisor project with:
+
+- a Pyramid backend for the existing application flow
+- a FastAPI ML service for training and inference APIs
+- a React frontend for the user interface
+
+## Preview
+
 <img width="1281" height="733" alt="{52FC3C71-9483-4BAE-9340-D22CA12F0B29}" src="https://github.com/user-attachments/assets/26490c5c-3a05-4b5a-aa97-c5dda9566940" />
 <img width="1145" height="644" alt="{A6361EA5-4B7F-48B7-B2B8-FBA997C9120B}" src="https://github.com/user-attachments/assets/3412c6ba-191f-4a64-9c1e-974411427c30" />
 <img width="1158" height="479" alt="{2BD89FB3-AD02-47C7-A909-D8471A0FBDEB}" src="https://github.com/user-attachments/assets/3d88ab42-7adc-49b9-9987-cea4f27ba825" />
@@ -9,23 +16,49 @@ AI-powered finance advisor project with a Pyramid backend, ML prediction endpoin
 
 ## Features
 
-- Loan approval prediction API (`/api/predict`) using a trained scikit-learn pipeline.
-- Prediction history API (`/api/predictions`) persisted in SQLite.
-- FastAPI ML API with health, train, load, save, predict, and automatic docs endpoints.
-- AI financial file analysis API (`/api/ai/analyze`) for CSV/Excel/JSON/TXT uploads.
-- Follow-up advisor chat API (`/api/ai/chat`) with session-based context.
-- Local utility scripts for backend/frontend startup and project checks.
+- Loan approval prediction using a trained scikit-learn pipeline
+- Prediction history persisted in SQLite
+- FastAPI endpoints for training, loading, saving, and prediction
+- Automatic Swagger and ReDoc documentation
+- Postman-friendly JSON request/response workflow
+- AI financial file analysis endpoints
+- Follow-up advisor chat endpoints
+- Local scripts for backend, frontend, and test execution
+
+## Project Structure
+
+```text
+FINANCE-AI-ADVISOR/
+|-- backend/
+|   |-- finance_ai/
+|   |   |-- fastapi_app.py
+|   |   |-- services/
+|   |   |   `-- ml_workflow_service.py
+|   |   `-- ml_models/
+|   |       |-- train_model.py
+|   |       |-- model.pkl
+|   |       `-- loan_status_prediction.csv
+|   `-- tests/
+|-- frontend/
+|-- scripts/
+|   |-- start-backend.ps1
+|   |-- start-fastapi.ps1
+|   |-- start-frontend.ps1
+|   |-- train_expense_model.py
+|   `-- train_anomaly_model.py
+`-- docs/
+```
 
 ## Installation
 
-### 1) Clone repository
+### 1. Clone repository
 
 ```powershell
 git clone <YOUR_GITHUB_REPO_URL>
 cd FINANCE-AI-ADVISOR
 ```
 
-### 2) Backend setup (Python)
+### 2. Backend setup
 
 ```powershell
 cd backend
@@ -36,7 +69,7 @@ Copy-Item .env.example .env
 cd ..
 ```
 
-### 3) React frontend setup (Node.js)
+### 3. Frontend setup
 
 ```powershell
 cd frontend
@@ -46,64 +79,60 @@ cd ..
 
 ## How To Run
 
-### Run backend only
+### Pyramid backend
 
 ```powershell
 .\scripts\start-backend.ps1
 ```
 
-Backend default URL: `http://localhost:6543`
+Default URL: `http://localhost:6543`
 
-### Run FastAPI ML API
+### FastAPI ML API
 
 ```powershell
 .\scripts\start-fastapi.ps1
 ```
 
-FastAPI default URL: `http://localhost:8000`
-Docs: `http://localhost:8000/docs`
+Default URL: `http://localhost:8000`
 
-### Run React frontend only
+Docs:
+
+- `http://localhost:8000/docs`
+- `http://localhost:8000/redoc`
+
+### React frontend
 
 ```powershell
 .\scripts\start-frontend.ps1
 ```
 
-Frontend default URL: `http://localhost:5173`
+Default URL: `http://localhost:5173`
 
-### Run both
+### Run both app layers
 
 ```powershell
 .\scripts\start-all.ps1
 ```
 
-## How To See Which Port Is Running
+## ML Workflow
 
-### Option 1: Use startup logs
+The existing workflow is preserved:
 
-- Backend script prints: `Starting backend on http://localhost:6543`
-- Frontend script prints: `Starting frontend on http://localhost:5173`
+1. Train the model locally
+2. Save the model as a local artifact
+3. Load the saved model
+4. Send inputs for prediction
+5. Return results as API responses instead of terminal-only output
 
-### Option 2: Check active listening ports in PowerShell
-
-```powershell
-Get-NetTCPConnection -State Listen | Sort-Object LocalPort | Select-Object LocalAddress, LocalPort, OwningProcess
-```
-
-### Option 3: Check specific ports
-
-```powershell
-netstat -ano | findstr :6543
-netstat -ano | findstr :5173
-```
-
-## Training (new pipeline)
-
-The active model file used by prediction APIs is:
+Active model artifact:
 
 - `backend/finance_ai/ml_models/model.pkl`
 
-To retrain and overwrite this model:
+Training dataset:
+
+- `backend/finance_ai/ml_models/loan_status_prediction.csv`
+
+### Local training
 
 ```powershell
 cd backend
@@ -111,31 +140,146 @@ cd backend
 cd ..
 ```
 
-You can also train, load, save, and predict through FastAPI:
-
-- `GET /health`
-- `GET /api/v1/models/status`
-- `POST /api/v1/models/train`
-- `POST /api/v1/models/load`
-- `POST /api/v1/models/save`
-- `POST /api/v1/predict`
-
-Notes:
-
-- This training pipeline reads `backend/finance_ai/ml_models/loan_status_prediction.csv`.
-- `scripts/train_expense_model.py` and `scripts/train_anomaly_model.py` now call the shared training workflow and save local artifacts with their existing filenames.
-
-## React frontend
-
-The repo scripts expect a React app in `frontend/` (typically Vite-based):
-
-- `scripts/start-frontend.ps1` runs `npm run dev` (default Vite port `5173`)
-- `scripts/run-tests.ps1` runs frontend lint and build commands
-
-If `frontend/` is missing, create it first:
+### Alternate script wrappers
 
 ```powershell
-npm create vite@latest frontend -- --template react
-cd frontend
-npm install
+python .\scripts\train_expense_model.py
+python .\scripts\train_anomaly_model.py
 ```
+
+These wrappers now call the shared ML workflow service and save artifacts using their current filenames.
+
+## FastAPI Endpoints
+
+### Health
+
+- `GET /health`
+
+### Model status
+
+- `GET /api/v1/models/status`
+
+### Train model
+
+- `POST /api/v1/models/train`
+
+Example body:
+
+```json
+{
+  "model_name": "loan_approval",
+  "persist_model": true,
+  "load_after_train": true
+}
+```
+
+### Load model
+
+- `POST /api/v1/models/load`
+
+Example body:
+
+```json
+{
+  "model_name": "loan_approval",
+  "force_reload": false
+}
+```
+
+### Save loaded model
+
+- `POST /api/v1/models/save`
+
+Example body:
+
+```json
+{
+  "model_name": "loan_approval"
+}
+```
+
+### Predict
+
+- `POST /api/v1/predict`
+
+The API accepts both original column names and snake_case field names.
+
+Example body:
+
+```json
+{
+  "ApplicantIncome": 5000,
+  "CoapplicantIncome": 1500,
+  "LoanAmount": 120,
+  "Credit_History": 1
+}
+```
+
+Postman-friendly example:
+
+```json
+{
+  "applicant_income": 5000,
+  "coapplicant_income": 1500,
+  "loan_amount": 120,
+  "credit_history": 1
+}
+```
+
+## Postman Testing
+
+Use:
+
+- Method: `POST`
+- URL: `http://localhost:8000/api/v1/predict`
+- Header: `Content-Type: application/json`
+
+Sample response shape:
+
+```json
+{
+  "status": "success",
+  "message": "Prediction generated successfully",
+  "data": {
+    "prediction": "Approved",
+    "probability_approved": 0.84
+  }
+}
+```
+
+## Checks And Tests
+
+Project checks:
+
+```powershell
+.\scripts\run-tests.ps1
+```
+
+Focused backend test:
+
+```powershell
+cd backend
+.\venv\Scripts\python.exe -m unittest tests.test_fastapi_ml_api -v
+cd ..
+```
+
+## Ports
+
+Common local ports:
+
+- Pyramid backend: `6543`
+- FastAPI ML API: `8000`
+- React frontend: `5173`
+
+To inspect active ports:
+
+```powershell
+Get-NetTCPConnection -State Listen | Sort-Object LocalPort | Select-Object LocalAddress, LocalPort, OwningProcess
+```
+
+## Notes
+
+- The original Pyramid backend was not replaced.
+- FastAPI was added as a separate ML API layer for REST usage and later deployment.
+- Model artifacts are stored locally and loaded from disk.
+- The FastAPI layer is designed to be tested directly from Swagger UI or Postman.

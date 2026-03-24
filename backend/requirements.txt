@@ -10,7 +10,7 @@ distro==1.9.0
 et_xmlfile==2.0.0
 fastapi==0.121.0
 # Editable install with no version control (finance_ai==0.1)
--e d:\pyprojects\finance-ai-advisor\backend
+-e .
 google-ai-generativelanguage==0.6.15
 google-api-core==2.30.0
 google-api-python-client==2.190.0
