@@ -11,6 +11,7 @@ AI-powered finance advisor project with a Pyramid backend, ML prediction endpoin
 
 - Loan approval prediction API (`/api/predict`) using a trained scikit-learn pipeline.
 - Prediction history API (`/api/predictions`) persisted in SQLite.
+- FastAPI ML API with health, train, load, save, predict, and automatic docs endpoints.
 - AI financial file analysis API (`/api/ai/analyze`) for CSV/Excel/JSON/TXT uploads.
 - Follow-up advisor chat API (`/api/ai/chat`) with session-based context.
 - Local utility scripts for backend/frontend startup and project checks.
@@ -52,6 +53,15 @@ cd ..
 ```
 
 Backend default URL: `http://localhost:6543`
+
+### Run FastAPI ML API
+
+```powershell
+.\scripts\start-fastapi.ps1
+```
+
+FastAPI default URL: `http://localhost:8000`
+Docs: `http://localhost:8000/docs`
 
 ### Run React frontend only
 
@@ -101,10 +111,19 @@ cd backend
 cd ..
 ```
 
+You can also train, load, save, and predict through FastAPI:
+
+- `GET /health`
+- `GET /api/v1/models/status`
+- `POST /api/v1/models/train`
+- `POST /api/v1/models/load`
+- `POST /api/v1/models/save`
+- `POST /api/v1/predict`
+
 Notes:
 
 - This training pipeline reads `backend/finance_ai/ml_models/loan_status_prediction.csv`.
-- Placeholder scripts exist at `scripts/train_expense_model.py` and `scripts/train_anomaly_model.py`; implement these if you want separate production pipelines.
+- `scripts/train_expense_model.py` and `scripts/train_anomaly_model.py` now call the shared training workflow and save local artifacts with their existing filenames.
 
 ## React frontend
 
