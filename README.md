@@ -443,3 +443,16 @@ Get-NetTCPConnection -State Listen | Sort-Object LocalPort | Select-Object Local
 - FastAPI was added as a separate ML API layer for REST usage and later deployment.
 - Model artifacts are stored locally and loaded from disk.
 - The FastAPI layer is designed to be tested directly from Swagger UI or Postman.
+
+
+
+
+
+
+https://github.com/user-attachments/assets/b967b80e-b2d3-4dcc-8721-b6478191a5a3
+
+
+
+
+
+
