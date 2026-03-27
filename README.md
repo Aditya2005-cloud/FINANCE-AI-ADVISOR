@@ -449,7 +449,10 @@ Get-NetTCPConnection -State Listen | Sort-Object LocalPort | Select-Object Local
 
 
 
-https://github.com/user-attachments/assets/b967b80e-b2d3-4dcc-8721-b6478191a5a3
+
+
+https://github.com/user-attachments/assets/4e1e2e2d-c521-430f-8c16-90fcd5935f45
+
 
 
 
