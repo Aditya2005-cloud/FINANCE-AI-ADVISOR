@@ -10,6 +10,11 @@ AI-powered finance advisor project with:
 
 Fastest way to run this project:
 
+Updated:
+
+- Docker images are now documented for Docker Hub usage.
+- `.env` should be passed at runtime and is excluded from future Docker builds.
+
 1. Pull the Docker image:
 
 ```powershell
@@ -19,13 +24,13 @@ docker pull n8nproject2026/finance-ai-advisor:latest
 2. Start FastAPI backend:
 
 ```powershell
-docker run --name finance-fastapi --rm -p 8000:8000 -e APP_MODE=fastapi n8nproject2026/finance-ai-advisor:latest
+docker run --name finance-fastapi --rm -p 8000:8000 --env-file backend/.env -e APP_MODE=fastapi n8nproject2026/finance-ai-advisor:latest
 ```
 
 3. Start Pyramid backend in another terminal:
 
 ```powershell
-docker run --name finance-pyramid --rm -p 6543:6543 -e APP_MODE=pyramid n8nproject2026/finance-ai-advisor:latest
+docker run --name finance-pyramid --rm -p 6543:6543 --env-file backend/.env -e APP_MODE=pyramid n8nproject2026/finance-ai-advisor:latest
 ```
 
 4. Start frontend locally:
@@ -163,6 +168,11 @@ This image supports two backend modes:
 - `APP_MODE=pyramid` runs the Pyramid backend on port `6543`
 - `APP_MODE=fastapi` runs the FastAPI backend on port `8000`
 
+Important:
+
+- The Docker image should not contain your private `.env` file.
+- Pass secrets and API keys at runtime with `--env-file backend/.env` or `-e KEY=value`.
+
 ### Step 1. Pull the image
 
 ```powershell
@@ -174,7 +184,7 @@ docker pull n8nproject2026/finance-ai-advisor:latest
 This backend handles prediction and AI upload/chat fallback:
 
 ```powershell
-docker run --name finance-fastapi --rm -p 8000:8000 -e APP_MODE=fastapi n8nproject2026/finance-ai-advisor:latest
+docker run --name finance-fastapi --rm -p 8000:8000 --env-file backend/.env -e APP_MODE=fastapi n8nproject2026/finance-ai-advisor:latest
 ```
 
 Open in browser after startup:
@@ -187,7 +197,7 @@ Open in browser after startup:
 This backend handles the original app routes and prediction history dashboard:
 
 ```powershell
-docker run --name finance-pyramid --rm -p 6543:6543 -e APP_MODE=pyramid n8nproject2026/finance-ai-advisor:latest
+docker run --name finance-pyramid --rm -p 6543:6543 --env-file backend/.env -e APP_MODE=pyramid n8nproject2026/finance-ai-advisor:latest
 ```
 
 Open in browser after startup:
@@ -223,13 +233,13 @@ If you only want one backend:
 FastAPI only:
 
 ```powershell
-docker run --name finance-fastapi --rm -p 8000:8000 -e APP_MODE=fastapi n8nproject2026/finance-ai-advisor:latest
+docker run --name finance-fastapi --rm -p 8000:8000 --env-file backend/.env -e APP_MODE=fastapi n8nproject2026/finance-ai-advisor:latest
 ```
 
 Pyramid only:
 
 ```powershell
-docker run --name finance-pyramid --rm -p 6543:6543 -e APP_MODE=pyramid n8nproject2026/finance-ai-advisor:latest
+docker run --name finance-pyramid --rm -p 6543:6543 --env-file backend/.env -e APP_MODE=pyramid n8nproject2026/finance-ai-advisor:latest
 ```
 
 ### Stop the containers
@@ -243,6 +253,7 @@ docker stop finance-pyramid
 
 - If the frontend shows `Server returned non-JSON response (500)`, first confirm both backends are running.
 - If Docker Desktop is used, create two containers, not one. One container should use `APP_MODE=fastapi`, and the other should use `APP_MODE=pyramid`.
+- If AI upload/chat is used, make sure your runtime env file includes keys such as `GOOGLE_API_KEY` when needed.
 - If you updated the image recently, pull again before starting:
 
 ```powershell
