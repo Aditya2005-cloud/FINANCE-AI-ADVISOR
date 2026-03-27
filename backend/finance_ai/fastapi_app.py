@@ -2,9 +2,10 @@ from __future__ import annotations
 
 from typing import Annotated
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, File, Form, HTTPException, UploadFile
 from pydantic import AliasChoices, BaseModel, Field
 
+from finance_ai.services.ai_service import analyze_financial_upload, continue_advisor_chat
 from finance_ai.services.ml_workflow_service import (
     SUPPORTED_MODEL_NAME,
     get_model_status,
@@ -54,6 +55,11 @@ class PredictionRequest(BaseModel):
     model_name: str = SUPPORTED_MODEL_NAME
     model_path: str | None = None
     persist_log: bool = True
+
+
+class AdvisorChatRequest(BaseModel):
+    session_id: str
+    question: str
 
 
 app = FastAPI(
@@ -175,4 +181,47 @@ def predict_endpoint(payload: PredictionRequest) -> dict[str, object]:
         "status": "success",
         "message": "Prediction generated successfully",
         "data": result,
+    }
+
+
+@app.post("/api/v1/ai/analyze")
+@app.post("/api/ai/analyze")
+async def ai_analyze_endpoint(
+    file: UploadFile = File(...),
+    notes: str = Form(default=""),
+) -> dict[str, object]:
+    try:
+        file_bytes = await file.read()
+        result = analyze_financial_upload(
+            file_name=file.filename or "upload.csv",
+            file_bytes=file_bytes,
+            notes=notes,
+        )
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=str(exc)) from exc
+
+    return {
+        "status": "success",
+        **result,
+    }
+
+
+@app.post("/api/v1/ai/chat")
+@app.post("/api/ai/chat")
+def ai_chat_endpoint(payload: AdvisorChatRequest) -> dict[str, object]:
+    try:
+        result = continue_advisor_chat(
+            session_id=(payload.session_id or "").strip(),
+            question=(payload.question or "").strip(),
+        )
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=str(exc)) from exc
+
+    return {
+        "status": "success",
+        **result,
     }

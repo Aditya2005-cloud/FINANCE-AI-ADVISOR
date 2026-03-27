@@ -15,7 +15,8 @@ COPY backend /app/backend
 COPY frontend /app/frontend
 
 RUN sed -i 's|^listen = .*|listen = *:6543|' /app/backend/development.ini
+RUN chmod +x /app/backend/docker-entrypoint.sh
 
-EXPOSE 6543
+EXPOSE 6543 8000
 
-CMD ["pserve", "development.ini"]
+ENTRYPOINT ["/app/backend/docker-entrypoint.sh"]

@@ -39,7 +39,8 @@ function App() {
   const [recentPredictions, setRecentPredictions] = useState([])
   const [loading, setLoading] = useState(false)
   const [loadingStats, setLoadingStats] = useState(false)
-  const [error, setError] = useState('')
+  const [predictionError, setPredictionError] = useState('')
+  const [dashboardError, setDashboardError] = useState('')
 
   const [advisorFile, setAdvisorFile] = useState(null)
   const [advisorNotes, setAdvisorNotes] = useState('')
@@ -72,8 +73,9 @@ function App() {
 
       setStats(payload.statistics)
       setRecentPredictions(payload.recent_predictions || [])
+      setDashboardError('')
     } catch (err) {
-      setError(err.message || 'Failed to load dashboard data')
+      setDashboardError(err.message || 'Failed to load dashboard data')
     } finally {
       setLoadingStats(false)
     }
@@ -91,32 +93,52 @@ function App() {
   async function handleSubmit(event) {
     event.preventDefault()
     setLoading(true)
-    setError('')
+    setPredictionError('')
 
     try {
-      const response = await fetch('/api/predict', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          ApplicantIncome: Number(form.applicantIncome),
-          CoapplicantIncome: Number(form.coapplicantIncome),
-          LoanAmount: Number(form.loanAmount),
-          Credit_History: Number(form.creditHistory),
-        }),
+      const requestBody = JSON.stringify({
+        ApplicantIncome: Number(form.applicantIncome),
+        CoapplicantIncome: Number(form.coapplicantIncome),
+        LoanAmount: Number(form.loanAmount),
+        Credit_History: Number(form.creditHistory),
       })
+      const predictionEndpoints = ['/ml-api/api/v1/predict', '/api/predict']
 
-      const payload = await readApiPayload(response)
+      let result = null
+      let lastError = null
 
-      if (!response.ok || payload.status !== 'success') {
-        throw new Error(payload.message || 'Prediction request failed')
+      for (const endpoint of predictionEndpoints) {
+        try {
+          const response = await fetch(endpoint, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: requestBody,
+          })
+
+          const payload = await readApiPayload(response)
+          const candidate = payload.data || payload
+
+          if (!response.ok || payload.status !== 'success' || !candidate?.prediction) {
+            throw new Error(payload.message || payload.detail || 'Prediction request failed')
+          }
+
+          result = candidate
+          break
+        } catch (err) {
+          lastError = err
+        }
       }
 
-      setPrediction(payload)
-      await fetchDashboard()
+      if (!result) {
+        throw lastError || new Error('Prediction request failed')
+      }
+
+      setPrediction(result)
+      fetchDashboard()
     } catch (err) {
-      setError(err.message || 'Prediction request failed')
+      setPredictionError(err.message || 'Prediction request failed')
     } finally {
       setLoading(false)
     }
@@ -256,7 +278,7 @@ function App() {
           </div>
         )}
 
-        {error && <p className="error">{error}</p>}
+        {predictionError && <p className="error">{predictionError}</p>}
       </section>
 
       <section className="panel">
@@ -328,6 +350,7 @@ function App() {
 
       <section className="panel">
         <h2>Prediction Stats</h2>
+        {dashboardError && <p className="error">{dashboardError}</p>}
         {loadingStats && !stats ? (
           <p>Loading analytics...</p>
         ) : stats ? (

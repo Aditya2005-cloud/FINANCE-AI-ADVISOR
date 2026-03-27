@@ -114,6 +114,117 @@ Default URL: `http://localhost:5173`
 .\scripts\start-all.ps1
 ```
 
+## Docker Hub Quickstart
+
+Published image:
+
+- `n8nproject2026/finance-ai-advisor:latest`
+
+This image supports two backend modes:
+
+- `APP_MODE=pyramid` runs the Pyramid backend on port `6543`
+- `APP_MODE=fastapi` runs the FastAPI backend on port `8000`
+
+### Step 1. Pull the image
+
+```powershell
+docker pull n8nproject2026/finance-ai-advisor:latest
+```
+
+### Step 2. Start the FastAPI backend
+
+This backend handles prediction and AI upload/chat fallback:
+
+```powershell
+docker run --name finance-fastapi --rm -p 8000:8000 -e APP_MODE=fastapi n8nproject2026/finance-ai-advisor:latest
+```
+
+Open in browser after startup:
+
+- `http://localhost:8000/health`
+- `http://localhost:8000/docs`
+
+### Step 3. Start the Pyramid backend
+
+This backend handles the original app routes and prediction history dashboard:
+
+```powershell
+docker run --name finance-pyramid --rm -p 6543:6543 -e APP_MODE=pyramid n8nproject2026/finance-ai-advisor:latest
+```
+
+Open in browser after startup:
+
+- `http://localhost:6543/`
+
+### Step 4. Start the frontend locally
+
+Open a new terminal:
+
+```powershell
+cd frontend
+$env:VITE_PYRAMID_API_ORIGIN="http://localhost:6543"
+$env:VITE_FASTAPI_API_ORIGIN="http://localhost:8000"
+npm install
+npm run dev
+```
+
+Then open:
+
+- `http://localhost:5173`
+
+### Step 5. Test the app
+
+1. Run a loan prediction.
+2. Upload a `.csv`, `.txt`, `.json`, or `.xlsx` file in the AI advisor section.
+3. Ask a follow-up question after analysis completes.
+
+### One-container examples
+
+If you only want one backend:
+
+FastAPI only:
+
+```powershell
+docker run --name finance-fastapi --rm -p 8000:8000 -e APP_MODE=fastapi n8nproject2026/finance-ai-advisor:latest
+```
+
+Pyramid only:
+
+```powershell
+docker run --name finance-pyramid --rm -p 6543:6543 -e APP_MODE=pyramid n8nproject2026/finance-ai-advisor:latest
+```
+
+### Stop the containers
+
+```powershell
+docker stop finance-fastapi
+docker stop finance-pyramid
+```
+
+### Troubleshooting
+
+- If the frontend shows `Server returned non-JSON response (500)`, first confirm both backends are running.
+- If Docker Desktop is used, create two containers, not one. One container should use `APP_MODE=fastapi`, and the other should use `APP_MODE=pyramid`.
+- If you updated the image recently, pull again before starting:
+
+```powershell
+docker pull n8nproject2026/finance-ai-advisor:latest
+```
+
+### For users who want to build locally
+
+```powershell
+docker build -f backend/Dockerfile -t finance-ai-advisor:latest .
+```
+
+### For repository owners who want to publish updates
+
+```powershell
+docker login
+docker build -f backend/Dockerfile -t n8nproject2026/finance-ai-advisor:latest .
+docker push n8nproject2026/finance-ai-advisor:latest
+```
+
 ## ML Workflow
 
 The existing workflow is preserved:
