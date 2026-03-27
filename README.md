@@ -6,6 +6,44 @@ AI-powered finance advisor project with:
 - a FastAPI ML service for training and inference APIs
 - a React frontend for the user interface
 
+## Quick Start
+
+Fastest way to run this project:
+
+1. Pull the Docker image:
+
+```powershell
+docker pull n8nproject2026/finance-ai-advisor:latest
+```
+
+2. Start FastAPI backend:
+
+```powershell
+docker run --name finance-fastapi --rm -p 8000:8000 -e APP_MODE=fastapi n8nproject2026/finance-ai-advisor:latest
+```
+
+3. Start Pyramid backend in another terminal:
+
+```powershell
+docker run --name finance-pyramid --rm -p 6543:6543 -e APP_MODE=pyramid n8nproject2026/finance-ai-advisor:latest
+```
+
+4. Start frontend locally:
+
+```powershell
+cd frontend
+$env:VITE_PYRAMID_API_ORIGIN="http://localhost:6543"
+$env:VITE_FASTAPI_API_ORIGIN="http://localhost:8000"
+npm install
+npm run dev
+```
+
+5. Open:
+
+- `http://localhost:5173`
+
+For full Docker instructions, see [Docker Hub Quickstart](#docker-hub-quickstart).
+
 ## Preview
 
 <img width="1281" height="733" alt="{52FC3C71-9483-4BAE-9340-D22CA12F0B29}" src="https://github.com/user-attachments/assets/26490c5c-3a05-4b5a-aa97-c5dda9566940" />
